@@ -13,6 +13,15 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleGlobalException(Exception e, WebRequest webRequest) {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(webRequest.getDescription(true),
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                e.getMessage(),
+                LocalDateTime.now());
+        return new ResponseEntity<>(errorResponseDto,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(DuplicateMobileNumberFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleDuplicateMobileNumberFound(DuplicateMobileNumberFoundException e, WebRequest webRequest) {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(webRequest.getDescription(true),
@@ -20,6 +29,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 e.getMessage(),
                 LocalDateTime.now());
         return new ResponseEntity<>(errorResponseDto,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(ResourceNotFoundException e, WebRequest webRequest){
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(webRequest.getDescription(true),
+                HttpStatus.NOT_FOUND,
+                e.getMessage(),
+                LocalDateTime.now());
+        return new ResponseEntity<>(errorResponseDto,HttpStatus.NOT_FOUND);
     }
 
 }
