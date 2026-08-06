@@ -30,8 +30,6 @@ public class IAccountsServiceImpl implements IAccountsService {
         if(customerRepository.findBymobileNumber(customer.getMobileNumber()).isPresent()){
             throw new DuplicateMobileNumberFoundException("Customer with the following mobile number already exist" + customer.getMobileNumber());
         }
-        customer.setCreatedAt(LocalDateTime.now());
-        customer.setCreatedBy("Anonymous");
         Customer customerDetail = customerRepository.save(customer);
         Accounts account = createAccounts(customerDetail);
         accountsRepository.save(account);
@@ -87,8 +85,6 @@ public class IAccountsServiceImpl implements IAccountsService {
                     ()-> new ResourceNotFoundException("Customer","CustomerId",customerId.toString())
             );
             CustomerMapper.mapToCustomer(customerDto,customer);
-            customer.setUpdatedAt(LocalDateTime.now());
-            customer.setUpdatedBy("Anonymous");
             customerRepository.save(customer);
             isUpdated=true;
         }
